@@ -5,11 +5,13 @@ final class BehaviorRelayTests: XCTestCase {
     func test_basic() {
         var c = 0
         let p = BehaviorRelay<Int>(value: 10)
+        XCTAssertEqual(p.value, 10)
         p.subscribe { (v) in
             c += 1
             print("sub1: \(v)")
         }
         p.accept(20)
+        XCTAssertEqual(p.value, 20)
         XCTAssertEqual(c, 2)
 
         p.subscribe { (v) in
@@ -17,6 +19,7 @@ final class BehaviorRelayTests: XCTestCase {
             print("sub2: \(v)")
         }
         p.accept(30)
+        XCTAssertEqual(p.value, 30)
         XCTAssertEqual(c, 5)
     }
     func test_deinit() {
