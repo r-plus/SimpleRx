@@ -1,6 +1,6 @@
 import Foundation
 
-public class BehaviorRelay<Element>: Observable<Element> {
+public final class BehaviorRelay<Element>: Observable<Element> {
 
     private var observers: [OnNextClosure] = []
     private let lock = NSRecursiveLock()

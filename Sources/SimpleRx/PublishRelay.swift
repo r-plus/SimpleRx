@@ -1,6 +1,6 @@
 import Foundation
 
-public class PublishRelay<Element>: Observable<Element> {
+public final class PublishRelay<Element>: Observable<Element> {
 
     private var observers: [OnNextClosure] = []
     private let lock = NSRecursiveLock()
