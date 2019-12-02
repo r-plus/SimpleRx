@@ -1,8 +1,10 @@
 import Foundation
 
-public final class BehaviorRelay<Element>: Observable<Element> {
+public final class BehaviorRelay<Element>
+    : Observable<Element>
+    , SynchronizedUnsubscribeType {
 
-    private var observers: [OnNextClosure] = []
+    private var observers = Bag<OnNextClosure>()
     private let lock = NSRecursiveLock()
     private var element: Element
 
@@ -19,24 +21,26 @@ public final class BehaviorRelay<Element>: Observable<Element> {
         lock.lock()
         self.element = element
         if Thread.isMainThread {
-            for o in observers {
-                o(element)
-            }
+            observers.forEach { $0(element) }
             lock.unlock()
         } else {
             DispatchQueue.main.async {
-                for o in self.observers {
-                    o(element)
-                }
+                self.observers.forEach { $0(element) }
                 self.lock.unlock()
             }
         }
     }
 
-    public override func subscribe(onNext next: @escaping OnNextClosure) {
+    public override func subscribe(onNext next: @escaping OnNextClosure) -> Disposable {
         lock.lock(); defer { lock.unlock() }
-        observers.append(next)
+        let key = observers.insert(next)
         next(value)
+        return SubscriptionDisposable(owner: self, key: key)
+    }
+    
+    func synchronizedUnsubscribe(_ disposeKey: BagKey) {
+        lock.lock(); defer { lock.unlock() }
+        observers.removeKey(disposeKey)
     }
 }
 
