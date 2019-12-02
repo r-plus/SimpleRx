@@ -6,3 +6,7 @@ Ultra simply RxSwift/RxRelay replacement to remove dependency from framework for
 
 - PublishRelay
 - BehaviorRelay
+
+## +features
+
++Disposable: [disposable branch](https://github.com/r-plus/SimpleRx/tree/disposable)
