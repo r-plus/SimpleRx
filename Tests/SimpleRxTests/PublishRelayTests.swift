@@ -40,7 +40,7 @@ final class PublishRelayTests: XCTestCase {
         let p = PublishRelay<Int>()
         p.subscribe { (v) in
             c += 1
-            XCTAssertTrue(Thread.isMainThread)
+            XCTAssertFalse(Thread.isMainThread)
             exp.fulfill()
         }
         DispatchQueue.global(qos: .userInteractive).async {

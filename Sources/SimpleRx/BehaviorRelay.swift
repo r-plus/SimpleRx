@@ -18,19 +18,10 @@ public final class BehaviorRelay<Element>: Observable<Element> {
     public func accept(_ element: Element) {
         lock.lock()
         self.element = element
-        if Thread.isMainThread {
-            for o in observers {
-                o(element)
-            }
-            lock.unlock()
-        } else {
-            DispatchQueue.main.async {
-                for o in self.observers {
-                    o(element)
-                }
-                self.lock.unlock()
-            }
+        for o in observers {
+            o(element)
         }
+        lock.unlock()
     }
 
     public override func subscribe(onNext next: @escaping OnNextClosure) {
